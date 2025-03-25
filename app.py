@@ -9,10 +9,10 @@ import os
 app = Flask(__name__)
 
 # Load database connection info from environment variables
-db_user = os.environ.get('DB_USERNAME')
-db_password = os.environ.get('DB_PASSWORD')
-db_host = os.environ.get('DB_HOST')
-db_name = os.environ.get('DB_NAME')
+db_user = os.environ.get('DB_USERNAME', 'legitex')
+db_password = os.environ.get('DB_PASSWORD', '4dxr25Dk6GTeqO1M')
+db_host = os.environ.get('DB_HOST', '35.240.249.232')
+db_name = os.environ.get('DB_NAME', 'legitex')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -22,7 +22,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-    
+
 # Register auth blueprint
 app.register_blueprint(auth_bp)
 

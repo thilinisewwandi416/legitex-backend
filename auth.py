@@ -3,9 +3,10 @@ from models import db, User
 import jwt
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 auth_bp = Blueprint('auth', __name__)
-SECRET_KEY = 'your_secret_key_here'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 @auth_bp.route('/register', methods=['POST'])
 def register():

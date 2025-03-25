@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 auth_bp = Blueprint('auth', __name__)
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'a022f97d61d66eacaa5217c8e8da7923b1e4626e12d0d1bac27ac0b8c1bfe28c')
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -30,13 +30,15 @@ def token_required(f):
     from functools import wraps
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.headers.get('Authorization')
-        if not token:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
             return jsonify({'error': 'Token is missing'}), 401
         try:
+            # Expecting the header format: "Bearer <token>"
+            token = auth_header.split(" ")[1]
             data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             current_user = User.query.get(data['user_id'])
-        except Exception:
-            return jsonify({'error': 'Invalid token'}), 401
+        except Exception as e:
+            return jsonify({'error': 'Invalid token or token parsing failed', 'message': str(e)}), 401
         return f(current_user, *args, **kwargs)
     return decorated

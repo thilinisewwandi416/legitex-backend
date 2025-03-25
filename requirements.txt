@@ -9,3 +9,7 @@ scikit-learn
 numpy
 fuzzywuzzy
 python-Levenshtein
+pymysql
+flask_sqlalchemy
+pyjwt
+werkzeug

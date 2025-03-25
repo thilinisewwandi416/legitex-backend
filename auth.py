@@ -1,0 +1,41 @@
+from flask import Blueprint, request, jsonify
+from models import db, User
+import jwt
+from datetime import datetime, timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
+
+auth_bp = Blueprint('auth', __name__)
+SECRET_KEY = 'your_secret_key_here'
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    user = User(username=data['username'], email=data['email'])
+    user.set_password(data['password'])
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': 'User registered successfully'})
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    if user and user.check_password(data['password']):
+        token = jwt.encode({'user_id': user.id, 'exp': datetime.utcnow() + timedelta(hours=24)}, SECRET_KEY, algorithm="HS256")
+        return jsonify({'token': token})
+    return jsonify({'error': 'Invalid username or password'}), 401
+
+def token_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'error': 'Token is missing'}), 401
+        try:
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            current_user = User.query.get(data['user_id'])
+        except Exception:
+            return jsonify({'error': 'Invalid token'}), 401
+        return f(current_user, *args, **kwargs)
+    return decorated

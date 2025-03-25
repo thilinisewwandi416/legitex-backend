@@ -1,11 +1,11 @@
-name: Deploy Docker Image to Artifact Registry
+name: Deploy Docker Image to Artifact Registry and Cloud Run
 
 on:
   push:
     branches: [ master ]
 
 jobs:
-  build-and-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +34,14 @@ jobs:
       - name: Push Docker Image to Artifact Registry
         run: |
           docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO }}/phishing-api:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy phishing-api \
+            --image=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO }}/phishing-api:latest \
+            --region=${{ secrets.GCP_REGION }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --port=5000 \
+            --memory=512Mi \
+            --quiet

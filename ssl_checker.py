@@ -33,8 +33,8 @@ def check_ssl_certificate_info(domain):
         return {
             "common_name": common_name,
             "expiration_date": expiration_date,
-            "ssl_verified": ssl_verified
+            "ssl_verified": bool(ssl_verified)
         }
-
+    
     except Exception as e:
         return {"error": str(e)}

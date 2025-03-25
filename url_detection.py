@@ -55,7 +55,7 @@ def analyze_url(url):
 
     phishing_confidence = max(rf_proba, svm_proba)
     return {
-        "typosquatting_detected": typosquatting,
-        "phishing_confidence": phishing_confidence,
-        "is_phishing": phishing_confidence > 0.5
+    "typosquatting_detected": bool(typosquatting),
+    "phishing_confidence": float(phishing_confidence),
+    "is_phishing": bool(phishing_confidence > 0.5)
     }

@@ -1,0 +1,11 @@
+flask
+gunicorn
+cryptography
+requests
+validators
+joblib
+pandas
+scikit-learn
+numpy
+fuzzywuzzy
+python-Levenshtein

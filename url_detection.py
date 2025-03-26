@@ -54,8 +54,10 @@ def analyze_url(url):
     svm_proba = svm_model.predict_proba(feature_df)[0][1]
 
     phishing_confidence = max(rf_proba, svm_proba)
+    phishing_percentage = round(phishing_confidence * 100, 2)  # 2 decimal places
+
     return {
-    "typosquatting_detected": bool(typosquatting),
-    "phishing_confidence": float(phishing_confidence),
-    "is_phishing": bool(phishing_confidence > 0.5)
+        "typosquatting_detected": bool(typosquatting),
+        "phishing_confidence": phishing_percentage,  # now shown as percentage
+        "is_phishing": phishing_confidence > 0.5
     }

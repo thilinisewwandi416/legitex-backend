@@ -11,20 +11,27 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'a022f97d61d66eacaa5217c8e8da7923b1e46
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    user = User(username=data['username'], email=data['email'])
+    if not data.get('email') or not data.get('password'):
+        return jsonify({'error': 'Email and password are required'}), 400
+
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({'error': 'Email already registered'}), 400
+
+    user = User(email=data['email'])
     user.set_password(data['password'])
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'User registered successfully'})
 
+
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    user = User.query.filter_by(username=data['username']).first()
+    user = User.query.filter_by(email=data['email']).first()
     if user and user.check_password(data['password']):
         token = jwt.encode({'user_id': user.id, 'exp': datetime.utcnow() + timedelta(hours=24)}, SECRET_KEY, algorithm="HS256")
         return jsonify({'token': token})
-    return jsonify({'error': 'Invalid username or password'}), 401
+    return jsonify({'error': 'Invalid email or password'}), 401
 
 def token_required(f):
     from functools import wraps

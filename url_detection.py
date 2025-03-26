@@ -58,6 +58,6 @@ def analyze_url(url):
 
     return {
         "typosquatting_detected": bool(typosquatting),
-        "phishing_confidence": phishing_percentage,  # now shown as percentage
-        "is_phishing": phishing_confidence > 0.5
+        "phishing_confidence": float(phishing_percentage),  # Already rounded
+        "is_phishing": bool(phishing_confidence > 0.5)
     }

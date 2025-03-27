@@ -3,6 +3,7 @@ from models import db, URLCheck
 from ssl_checker import check_ssl_certificate_info
 from url_detection import analyze_url
 from auth import auth_bp, token_required
+from visual_similarity import check_visual_similarity
 from datetime import datetime
 import os
 
@@ -37,12 +38,13 @@ def analyze_url_endpoint(current_user):
     domain = url.split("//")[-1].split("/")[0]
     ssl_result = check_ssl_certificate_info(domain)
     phishing_result = analyze_url(url)
+    visual_result = check_visual_similarity(url)
 
     url_check = URLCheck(
         user_id=current_user.id,
         url=url,
         phishing_confidence=phishing_result.get("phishing_confidence", 0),
-        visual_similarity_detected=phishing_result.get("visual_similarity_detected", False),
+        visual_similarity_detected=visual_result.get("visual_similarity_detected", False),
         is_safe=not phishing_result.get("is_phishing", False)
     )
     db.session.add(url_check)
@@ -51,7 +53,8 @@ def analyze_url_endpoint(current_user):
     return jsonify({
         "url": url,
         "ssl_check": ssl_result,
-        "phishing_check": phishing_result
+        "phishing_check": phishing_result,
+        "visual_similarity": visual_result
     })
 
 @app.route('/report', methods=['GET'])

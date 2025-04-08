@@ -13,3 +13,5 @@ pymysql
 flask_sqlalchemy
 pyjwt
 werkzeug
+Pillow
+tensorflow

@@ -60,17 +60,28 @@ def analyze_url_endpoint(current_user):
 @app.route('/report', methods=['GET'])
 @token_required
 def report(current_user):
-    checks = URLCheck.query.filter_by(user_id=current_user.id).all()
-    report_data = [
-        {
+    checks = URLCheck.query.filter_by(user_id=current_user.id).order_by(URLCheck.checked_at.desc()).all()
+    report_data = []
+
+    for check in checks:
+        # Derive "title" and "issue" (optional enhancement)
+        title = "Phishing detected" if check.phishing_confidence > 0.5 else "Likely Safe"
+        issue = []
+        if check.phishing_confidence > 0.5:
+            issue.append("URL Reputation")
+        if check.visual_similarity_detected:
+            issue.append("Visual Clone")
+        if not issue:
+            issue.append("None")
+
+        report_data.append({
             "url": check.url,
-            "phishing_confidence": check.phishing_confidence,
-            "visual_similarity_detected": check.visual_similarity_detected,
-            "is_safe": check.is_safe,
+            "score": "Critical" if not check.is_safe else "Safe",
+            "title": title,
+            "issue": ", ".join(issue),
             "checked_at": check.checked_at.strftime("%Y-%m-%d %H:%M:%S")
-        }
-        for check in checks
-    ]
+        })
+
     return jsonify(report_data)
 
 if __name__ == "__main__":

@@ -15,3 +15,5 @@ pyjwt
 werkzeug
 Pillow
 tensorflow
+opencv-python
+selenium

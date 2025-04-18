@@ -23,7 +23,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# Register auth blueprint
 app.register_blueprint(auth_bp)
 
 @app.route('/analyze_url', methods=['POST'])
@@ -63,7 +62,6 @@ def report(current_user):
     report_data = []
 
     for check in checks:
-        # Derive "title" and "issue" (optional enhancement)
         title = "Phishing detected" if check.phishing_confidence > 0.5 else "Likely Safe"
         issue = []
         if check.phishing_confidence > 0.5:

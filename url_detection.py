@@ -97,17 +97,17 @@ def analyze_url(url, rf_weight=0.5, gb_weight=0.5, heuristic_weight=0.5):
 
 
 if __name__ == "__main__":
-    test_url = input("🔍 Enter a URL to analyze: ").strip()
+    test_url = input(" Enter a URL to analyze: ").strip()
     result = analyze_url(test_url)
     
     if "error" in result:
-        print(f"❌ {result['error']}")
+        print(f" {result['error']}")
     else:
-        print("\n🎯 Unified Phishing Analysis")
-        print(f"🔗 URL:              {result['url']}")
-        print(f"📊 RF Confidence:    {result['rf_conf']}%")
-        print(f"📊 GB Confidence:    {result['gb_conf']}%")
-        print(f"🧠 Heuristic Score:  {result['heuristic_score']}%")
-        print(f"🔮 Combined Score:   {result['phishing_confidence']}%")
-        print(f"🏷️  Final Verdict:    {result['label']}")
-        print(f"🎨 Color Code:       {result['color']}")
+        print("\n Unified Phishing Analysis")
+        print(f" URL:              {result['url']}")
+        print(f" RF Confidence:    {result['rf_conf']}%")
+        print(f" GB Confidence:    {result['gb_conf']}%")
+        print(f" Heuristic Score:  {result['heuristic_score']}%")
+        print(f" Combined Score:   {result['phishing_confidence']}%")
+        print(f" Final Verdict:    {result['label']}")
+        print(f" Color Code:       {result['color']}")

@@ -13,8 +13,12 @@ model = tf.keras.models.load_model("phishiris_cnn_model.h5")
 def capture_screenshot(url, output_path="screenshot.png"):
     options = Options()
     options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1280x720")
+    options.binary_location = "/usr/bin/chromium"
+
     driver = webdriver.Chrome(options=options)
 
     try:

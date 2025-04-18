@@ -10,8 +10,6 @@ RUN apt-get update && apt-get install -y \
     libgconf-2-4 \
     libfontconfig1 \
     libxss1 \
-    libappindicator1 \
-    libindicator7 \
     libsm6 \
     libxext6 \
     libxrender1 \

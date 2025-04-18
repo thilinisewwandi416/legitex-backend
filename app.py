@@ -9,7 +9,6 @@ import os
 
 app = Flask(__name__)
 
-# Load database connection info from environment variables
 db_user = os.environ.get('DB_USERNAME', 'legitex')
 db_password = os.environ.get('DB_PASSWORD', '4dxr25Dk6GTeqO1M')
 db_host = os.environ.get('DB_HOST', '35.240.249.232')

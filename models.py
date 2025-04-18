@@ -23,3 +23,10 @@ class URLCheck(db.Model):
     visual_similarity_detected = db.Column(db.Boolean, nullable=False)
     is_safe = db.Column(db.Boolean, nullable=False)
     checked_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class PasswordResetOTP(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    otp = db.Column(db.String(6), nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    verified = db.Column(db.Boolean, default=False) 
